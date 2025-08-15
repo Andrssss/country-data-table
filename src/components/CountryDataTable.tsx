@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 
-// ---- GraphQL & típusok (helyben) ----
 const ALL_COUNTRIES = gql`
   query AllCountries {
     countries {
@@ -20,7 +19,6 @@ type GqlCountry = {
 };
 type AllCountriesData = { countries: GqlCountry[] };
 
-// ---- Egyszerű helper függvények (helyben) ----
 const norm = (s: string) =>
   s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
@@ -30,7 +28,6 @@ const codeIncludes = (code: string, q: string) =>
 const nameIncludes = (name: string, q: string) =>
   !q.trim() || norm(name).includes(norm(q));
 
-// ---- Komponens ----
 const PAGE_SIZES = [10, 20, 50, 100] as const;
 type PageSize = (typeof PAGE_SIZES)[number];
 
@@ -55,7 +52,6 @@ export default function CountryDataTable() {
   const set = <K extends keyof typeof state>(k: K, v: (typeof state)[K]) =>
     setState((s) => ({ ...s, page: k === "page" ? (v as number) : 1, [k]: v }));
 
-  // Szűrőlisták
   const continents = useMemo(() => {
     const m = new Map<string, string>();
     all.forEach((c) => m.set(c.continentCode, c.continentName));
@@ -70,7 +66,6 @@ export default function CountryDataTable() {
     return [...s].sort();
   }, [all]);
 
-  // Szűrés
   const filtered = useMemo(() => {
     return all
       .filter((c) => state.continent === "ALL" || c.continentCode === state.continent)
@@ -79,7 +74,6 @@ export default function CountryDataTable() {
       .filter((c) => nameIncludes(c.name, state.nameQuery));
   }, [all, state]);
 
-  // Lapozás
   const pageCount = Math.max(1, Math.ceil(filtered.length / state.pageSize));
   const page = Math.min(state.page, pageCount);
   const start = (page - 1) * state.pageSize;
@@ -95,7 +89,7 @@ export default function CountryDataTable() {
         <p className="text-sm text-gray-600">Total entries: <span className="font-medium">{all.length}</span></p>
       </div>
 
-      {/* Szűrők */}
+      {/* filters */}
       <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-4">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <input
@@ -140,7 +134,7 @@ export default function CountryDataTable() {
         </div>
       </div>
 
-      {/* Tábla */}
+      {/* table */}
       <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-x-auto">
         <table className="min-w-full text-sm">
           <thead className="bg-gray-100">
@@ -167,7 +161,7 @@ export default function CountryDataTable() {
         </table>
       </div>
 
-      {/* Lapozás */}
+      {/* navigation logic */}
       <div className="flex items-center justify-between text-sm">
         <div>
           Showing <span className="font-medium">{filtered.length ? start + 1 : 0}</span>–
