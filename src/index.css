@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .card   { @apply bg-white border border-gray-200 rounded-xl shadow-sm; }
+  .input  { @apply w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500; }
+  .select { @apply rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500; }
+  .btn    { @apply rounded-md border bg-white px-3 py-1.5 text-sm hover:bg-gray-50 disabled:opacity-50; }
+}
